@@ -24,7 +24,7 @@ class Juego extends Soporte {
                 echo "Para " . $this->minJugadores . " jugadores.";
             }
         }else {
-            echo "De " . $this->minJugadores . " a " . $this->maxJugadores . ".<br>";
+            echo "De " . $this->minJugadores . " a " . $this->maxJugadores . " jugadores.<br>";
         }
     }
 

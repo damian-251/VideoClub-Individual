@@ -34,6 +34,14 @@ class Soporte {
         return $this->titulo;
     }
 
+    public function getAlquilado() : bool {
+        return $this->alquilado;
+    }
+
+    public function setAlquilado(bool $alquilado) {
+        $this->alquilado = $alquilado;
+    }
+
     public function muestraResumen() {
         echo $this->identificador . "<br>";
         echo "<i>" . $this->titulo . "</i><br>";

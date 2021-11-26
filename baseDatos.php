@@ -10,13 +10,6 @@ use Dwes\VideoClubIndividual\Juego;
 
 echo "<br>";
 
-$soporte1 = new Soporte("SWPKDB", "Pokémon Diamante", 49.54);
-echo "<strong>" . $soporte1->getTitulo() . "</strong>";
-echo "<br>Precio: " . $soporte1->getPrecio() . " euros";
-echo "<br>Precio IVA incluido: " . $soporte1->getPrecioConIVA() . "€<br>";
-$soporte1->muestraResumen();
-echo "<br>";
-
 $miCinta = new CintaVideo("VHSCZFT", "Los cazafantasmas", 3.5, 107);
 echo "<strong>" . $miCinta->getTitulo() . "</strong>";
 echo "<br>Precio: " . $miCinta->getPrecio() . " euros";
@@ -47,6 +40,13 @@ echo "<br>Precio: " . $juego2->getPrecio() . " euros";
 echo "<br>Precio IVA incluido: " . $juego2->getPrecioConIva() . " euros<br>";
 $juego2->muestraResumen();
 echo "<br>";
+echo "<br>";
+$juegoPokemon = new Juego("SWPKDB", "Pokémon Diamante Brillante", 49.54, "NSW", 1, 4);
+echo "<strong>" . $juegoPokemon->getTitulo() . "</strong>"; 
+echo "<br>Precio: " . $juegoPokemon->getPrecio() . " euros"; 
+echo "<br>Precio IVA incluido: " . $juegoPokemon->getPrecioConIva() . " euros<br>";
+$juegoPokemon->muestraResumen();
+echo "<br>";
 
 echo "<br>";
 $cli1 = new Cliente("Diego Serrano");
@@ -63,4 +63,15 @@ echo "<br>";
 $cli3 = new Cliente("Santiago Serrano");
 echo "Número cliente: " . $cli3->getNumero() . "<br>";
 echo $cli3->muestraResumen();
+
+$cli3->alquilar($juegoPokemon);
+
+echo $juegoPokemon->muestraResumen();
+
+echo "<pre>";
+echo print_r($cli3->getSoportesAlquilados());
+echo "</pre>";
+
+$cli3->muestraResumen();
+$cli3->listarAlquileres();
 
