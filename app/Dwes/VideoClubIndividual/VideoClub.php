@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 namespace Dwes\VideoClubIndividual;
+
+use Dwes\VideoClubIndividual\Util\ClienteNoEncontradoException;
+use Dwes\VideoClubIndividual\Util\SoporteNoEncontradoException;
+use Dwes\VideoClubIndividual\Util\VideoClubException;
 use Monolog\Logger;
 use Monolog\Handler\RotatingFileHandler;
 
@@ -10,6 +14,8 @@ class VideoClub {
     private int $numeroProductos;
     private array $socios;
     private int $numeroSocios;
+    private int $numeroProductosAlquilados;
+    private int $numeroTotalAlquileres;
     private Logger $videoClubLog;
 
     public function __construct($nombre) {
@@ -20,13 +26,30 @@ class VideoClub {
         $this->socios = [];
         $this->numeroProductos = 0;
         $this->numeroSocios = 0;
+        $this->numeroProductosAlquilados = 0;
+        $this->numeroTotalAlquileres = 0;
         $this->videoClubLog = new Logger("VideoClubLog");
         $this->videoClubLog->pushHandler(new RotatingFileHandler("logs/videoClub.log",0,Logger::DEBUG));
-
     }
 
     public function getNombre() : string {
         return $this->nombre;
+    }
+
+    public function getSoportes() : array {
+        return $this->productos;
+    }
+
+    public function getClientes() : array {
+        return $this->socios;
+    }
+
+    public function getNumeroProductosAlquilados() : int {
+        return $this->numeroProductosAlquilados;
+    }
+
+    public function getNumeroTotalAlquileres() : int {
+        return $this->numeroTotalAlquileres;
     }
 
 
@@ -38,8 +61,8 @@ class VideoClub {
         //Mirar después
     }
 
-    public function incluirCinta (string $titulo, float $precio, int $duracion) {
-        $identificador = random_bytes(5);
+    public function incluirCinta (string $identificador, string $titulo, float $precio, int $duracion) {
+        //$identificador = bin2hex(random_bytes(5));
         //Creamos una cinta de vídeo
         $cv = new CintaVideo($identificador, $titulo, $precio, $duracion);
         //LLamamos a la función privada incluirProducto para añadir el soporte
@@ -47,22 +70,22 @@ class VideoClub {
 
     }
 
-    public function incluirDvd(string $titulo, float $precio, string $idiomas, string $pantalla) {
-        $identificador = random_bytes(5);
+    public function incluirDvd(string $identificador, string $titulo, float $precio, string $idiomas, string $pantalla) {
+        //$identificador = bin2hex(random_bytes(5));
         $arrayIdiomas = explode(", " , $idiomas);
         $dvd = new Dvd($identificador, $titulo, $precio, $arrayIdiomas, $pantalla);
         $this->incluirProducto($dvd);
     }
 
-    public function incluirJuego(string $titulo, float $precio, string $consola, int $minJ, int $maxJ) {
-        $identificador = random_bytes(5);
+    public function incluirJuego(string $identificador, string $titulo, float $precio, string $consola, int $minJ, int $maxJ) {
+        //$identificador = bin2hex(random_bytes(5));
         $juego = new Juego($identificador, $titulo, $precio, $consola, $minJ, $maxJ);
         $this->incluirProducto($juego);
 
     }
 
-    public function incluirSocio(string $nombre, int $maxAlquileresConcurrentes = 3) {
-        $identificador = random_bytes(5); //Esto estaría mejor meterlo en el contructor original
+    public function incluirSocio(string $identificador, string $nombre, int $maxAlquileresConcurrentes = 3) {
+        //$identificador =  bin2hex(random_bytes(5)) ; //Esto estaría mejor meterlo en el contructor original
         $cliente = new Cliente($identificador, $nombre, $maxAlquileresConcurrentes);
         $this->socios[$identificador] = $cliente;
         $this->numeroSocios++;
@@ -86,8 +109,64 @@ class VideoClub {
     }
 
     public function alquilarSocioProducto(string $idCliente, string $idSoporte) {
-        $this->socios[$idCliente]->alquilar($this->productos[$idSoporte]);
-        //Quedan por añadir los casos de fallo, se añadirán con la excepciones
+        try {
+            if (!isset($this->socios[$idCliente])) {
+                throw new ClienteNoEncontradoException("El cliente " . $idCliente . " no existe");
+            }
+            if (!isset($this->productos[$idSoporte])) {
+                throw new SoporteNoEncontradoException("El soporte " . $idSoporte . " no existe.");
+            }
+            $this->socios[$idCliente]->alquilar($this->productos[$idSoporte]);
+            $this->numeroProductosAlquilados++;
+            $this->numeroTotalAlquileres++;
+
+        }catch (ClienteNoEncontradoException $e) {
+            $this->videoClubLog->warning($e);
+            echo $e->getMessage();            
+        }catch (SoporteNoEncontradoException $e) {
+            $this->videoClubLog->warning($e); 
+            echo $e->getMessage();
+        }catch (VideoClubException $e) {
+            $this->videoClubLog->warning($e);
+            echo $e->getMessage();
+        }        
+    }
+
+    public function devolverSocioProducto(string $idCliente, string $idSoporte) {
+        try {
+            if (!isset($this->socios[$idCliente])) {
+                throw new ClienteNoEncontradoException("El cliente " . $idCliente . " no existe");
+            }
+            if (!isset($this->productos[$idSoporte])) {
+                throw new SoporteNoEncontradoException("El soporte " . $idSoporte . " no existe.");
+            }
+            $this->socios[$idCliente]->devolver($this->productos[$idSoporte]);
+            $this->numeroProductosAlquilados--;
+
+        }catch (ClienteNoEncontradoException $e) {
+            $this->videoClubLog->warning($e);
+            echo $e->getMessage();            
+        }catch (SoporteNoEncontradoException $e) {
+            $this->videoClubLog->warning($e); 
+            echo $e->getMessage();
+        }catch (VideoClubException $e) {
+            $this->videoClubLog->warning($e);
+            echo $e->getMessage();
+        }        
+    }
+
+    public function alquilarSocioProductos(string $idCliente, array $idProductos) : VideoClub {
+        foreach ($idProductos as $idProducto) {
+            $this->alquilarSocioProducto($idCliente, $idProducto);
+        }
+        return $this;
+    }
+
+    public function devolverSocioProductos(string $idCliente, array $idProductos) : VideoClub {
+        foreach ($idProductos as $idProducto) {
+            $this->alquilarSocioProducto($idCliente, $idProducto);
+        }
+        return $this;
     }
 
 }
