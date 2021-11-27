@@ -15,15 +15,17 @@ class Cliente
     private int $numSoportesAlquilados;
     private array $SoportesAlquilados;
     private Logger $clienteLog;
+    private string $identificador;
 
 
 
-    public function __construct(string $nombre, int $maxAlquilerConcurrente = 3)
+    public function __construct(string $identificador, string $nombre, int $maxAlquilerConcurrente = 3)
     {
         self::$numClientes++;
         $this->numero = intval(self::$numClientes);
         $this->nombre = $nombre;
         $this->maxAlquilerConcurrente = $maxAlquilerConcurrente;
+        $this->identificador = $identificador;
         $this->numSoportesAlquilados = 0;
         $this->SoportesAlquilados = [];
         $this->clienteLog = new Logger("ClienteLogger");

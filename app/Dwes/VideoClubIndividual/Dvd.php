@@ -14,8 +14,7 @@ class Dvd extends Soporte {
         $this->formatoPantalla = $formatoPantalla;    
     }
 
-    public function muestraResumen()
-    {
+    public function muestraResumen() : void {
         parent::muestraResumen();
         echo "Idiomas: ";
         echo implode(", ", $this->idiomas) . ".<br>"; 

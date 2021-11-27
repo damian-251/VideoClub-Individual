@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace Dwes\VideoClubIndividual;
 
-class Soporte {
+abstract class Soporte implements Resumible {
     public static float $IVA = 21;
     protected string $titulo;
     protected string $identificador;
@@ -42,7 +42,7 @@ class Soporte {
         $this->alquilado = $alquilado;
     }
 
-    public function muestraResumen() {
+    public function muestraResumen() : void {
         echo $this->identificador . "<br>";
         echo "<i>" . $this->titulo . "</i><br>";
         echo $this->precio . "€ (IVA no incluido)<br>";
