@@ -8,13 +8,13 @@ class ClienteTest extends TestCase {
     
 
     public function testConstructor() {
-        $cliente = new Cliente("Cliente");
+        $cliente = new Cliente("idTest", "Cliente");
         $this->assertSame($cliente->getNombre(), "Cliente");
     }
 
     public function testAlquilarDevolver() {
         $soporte = new Soporte("TEST", "Soporte Test", 59.95);
-        $cliente = new Cliente("Cliente Test");
+        $cliente = new Cliente("idTest", "Cliente Test");
         $this->assertFalse($cliente->tieneAlquilado($soporte));
         $cliente->alquilar($soporte);
         $this->assertTrue($soporte->getAlquilado());

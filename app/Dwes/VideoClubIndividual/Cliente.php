@@ -3,14 +3,14 @@
 namespace Dwes\VideoClubIndividual;
 
 use Dwes\VideoClubIndividual\Util\CupoSuperadoException;
+use Dwes\VideoClubIndividual\Util\LogFactory;
 use Dwes\VideoClubIndividual\Util\SoporteNoEncontradoException;
 use Dwes\VideoClubIndividual\Util\SoporteYaAlquiladoException;
 use Dwes\VideoClubIndividual\Util\VideoClubException;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
 
-class Cliente
-{
+class Cliente {
 
     private static int $numClientes = 0;
     private string $numero;
@@ -24,40 +24,61 @@ class Cliente
     private int $numSoportesAlquilados;
     private array $SoportesAlquilados;
     private Logger $clienteLog;
-    private string $identificador;
+    private string $usuario;
+    private string $password;
 
 
 
-    public function __construct(string $identificador, string $nombre, int $maxAlquilerConcurrente = 3)
-    {
+    public function __construct(string $usuario, string $password, string $nombre, 
+    int $maxAlquilerConcurrente = 3) {
         self::$numClientes++;
         $this->numero = intval(self::$numClientes);
         $this->nombre = $nombre;
+        $this->usuario = $usuario;
+        $this->password = $password;
         $this->maxAlquilerConcurrente = $maxAlquilerConcurrente;
-        $this->identificador = $identificador;
         $this->numSoportesAlquilados = 0;
         $this->SoportesAlquilados = [];
-        $this->clienteLog = new Logger("ClienteLogger");
-        $this->clienteLog->pushHandler(new RotatingFileHandler("logs/cliente.log"), 0, Logger::DEBUG);
-
+        $this->clienteLog = LogFactory::getLogger("ClienteLogger");
     }
 
     public function getNombre() : string {
         return $this->nombre;
     }
 
-    public function getNumero(): string
-    {
+    public function getNumero() : string {
         return $this->numero;
     }
 
-    public function getNumSoportesAlquilados(): int
-    {
+    public function getUser() : string {
+        return $this->usuario;
+    }
+
+    public function getPassword() : string {
+        return $this->password;
+    }
+
+    public function getLogger() : Logger {
+        return $this->clienteLog;
+    }
+
+    public function setNombre(string $nombre) {
+        $this->nombre = $nombre;
+    }
+
+    public function setUser(string $user) {
+        $this->usuario = $user;
+    }
+
+    public function setPassword(string $password) {
+        $this->password = $password;
+    }
+
+    public function getNumSoportesAlquilados(): int {
         return $this->numSoportesAlquilados;
     }
 
-    public function tieneAlquilado(Soporte $s): bool
-    {
+    public function tieneAlquilado(Soporte $s): bool {
         //El array de soportes será un array clave-valor
         return (isset($this->SoportesAlquilados[$s->getIdentificador()]));
     }
@@ -87,7 +108,7 @@ class Cliente
             throw new SoporteYaAlquiladoException("El soporte " . $s->getTitulo() . " ya está alquilado.");
         }
     }
-
+    
     public function devolver(Soporte $s) : void {
         //La existencia del soporte o el cliente vienen filtrados por el método de videoclub,
         //se supone que aquí ya viene el soporte existiendo
@@ -105,7 +126,6 @@ class Cliente
         }else {
             throw new VideoClubException("Error al devolver el soporte, no aparecía como alquilado");
         }
-
     }
 
     /**
@@ -124,6 +144,7 @@ class Cliente
 
     public function muestraResumen() : void {
         echo "Nombre: " . $this->nombre . "<br>";
+        echo "Nombre de usuario: " . $this->usuario . ".<br>";
         echo "Número de soportes alquilados: " .  $this->numSoportesAlquilados . "<br>";
         echo "Soportes alquilados: " . count($this->SoportesAlquilados) . "<br>";
     }

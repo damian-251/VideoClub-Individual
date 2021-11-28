@@ -14,7 +14,8 @@
         "psr-4": {"Dwes\\": "app/Dwes"}
     },
     "require": {
-        "monolog/monolog": "^2.3"
+        "monolog/monolog": "^2.3",
+        "fabpot/goutte": "^4.0"
     },
     "scripts": {
         "test" : "phpunit --testdox --colors tests"

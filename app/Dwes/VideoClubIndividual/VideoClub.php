@@ -3,10 +3,10 @@ declare(strict_types=1);
 namespace Dwes\VideoClubIndividual;
 
 use Dwes\VideoClubIndividual\Util\ClienteNoEncontradoException;
+use Dwes\VideoClubIndividual\Util\LogFactory;
 use Dwes\VideoClubIndividual\Util\SoporteNoEncontradoException;
 use Dwes\VideoClubIndividual\Util\VideoClubException;
 use Monolog\Logger;
-use Monolog\Handler\RotatingFileHandler;
 
 class VideoClub {
     private string $nombre;
@@ -28,8 +28,7 @@ class VideoClub {
         $this->numeroSocios = 0;
         $this->numeroProductosAlquilados = 0;
         $this->numeroTotalAlquileres = 0;
-        $this->videoClubLog = new Logger("VideoClubLog");
-        $this->videoClubLog->pushHandler(new RotatingFileHandler("logs/videoClub.log",0,Logger::DEBUG));
+        $this->videoClubLog=LogFactory::getLogger("VideoClubLogger");
     }
 
     public function getNombre() : string {
@@ -51,7 +50,6 @@ class VideoClub {
     public function getNumeroTotalAlquileres() : int {
         return $this->numeroTotalAlquileres;
     }
-
 
     private function incluirProducto (Soporte $p) {
         //Añadimos el producto como array asociativo
@@ -84,12 +82,13 @@ class VideoClub {
 
     }
 
-    public function incluirSocio(string $identificador, string $nombre, int $maxAlquileresConcurrentes = 3) {
+    public function incluirSocio(string $usuario, string $password, string $nombre, int $maxAlquileresConcurrentes = 3) : Cliente {
         //$identificador =  bin2hex(random_bytes(5)) ; //Esto estaría mejor meterlo en el contructor original
-        $cliente = new Cliente($identificador, $nombre, $maxAlquileresConcurrentes);
-        $this->socios[$identificador] = $cliente;
+        $cliente = new Cliente($usuario, $password, $nombre, $maxAlquileresConcurrentes);
+        $this->socios[$usuario] = $cliente;
         $this->numeroSocios++;
-        $this->videoClubLog->info("Se ha añadido el Socio " . $cliente->getNumero() . " " .  $nombre . " a socios.");
+        $this->videoClubLog->info("Se ha añadido el Socio " . $cliente->getNumero() . " " .  $nombre . " a socios.", [$cliente]);
+        return $cliente;
     }
 
     public function listarProductos() {
@@ -101,7 +100,7 @@ class VideoClub {
     }
 
     public function listarSocios() {
-        foreach ($this->socios as $identificador => $socio) {
+        foreach ($this->socios as $usuario => $socio) {
             echo "<br>";
             $socio->muestraResumen();
             echo "<br>";
@@ -164,7 +163,7 @@ class VideoClub {
 
     public function devolverSocioProductos(string $idCliente, array $idProductos) : VideoClub {
         foreach ($idProductos as $idProducto) {
-            $this->alquilarSocioProducto($idCliente, $idProducto);
+            $this->devolverSocioProducto($idCliente, $idProducto);
         }
         return $this;
     }
