@@ -53,7 +53,7 @@ include_once "baseDatos.php"; //Incluimos los clientes y los soportes
     ?>
     <h2>Listado de soportes</h2>
     <?php 
-    $videoclub->listarProductos();
+    echo $videoclub->listarProductos();
     ?>
 </body>
 </html>

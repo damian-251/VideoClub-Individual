@@ -2,15 +2,19 @@
 
 include_once __DIR__ . "/vendor/autoload.php"; //Haría un include de las clases correspondientes
 use Dwes\VideoClubIndividual\VideoClub;
-
 //Generamos un nuevo videoclub
 
+use Dwes\VideoClubIndividual\Model\JuegoTest;
+
 $videoclub = new VideoClub("SuperVHS");
+
+$testJuego = new JuegoTest();
 
 $videoclub->incluirJuego("mdread", "Metroid Dread", 49.55, "Nintendo Switch", 1, 1);
 $videoclub->incluirJuego("pkdbri", "Pokémon Diamante Brillante", 49.55, "Nintendo Switch", 1, 4);
 $videoclub->incluirJuego("tgatch", "The Great Ace Attorney Chronicles", 28.93, "Nintendo Switch", 1, 1);
 $videoclub->incluirCinta("lczfts", "Los cazafantasmas", 15, 105);
+$videoclub->incluirDvd("hpchse", "Harry Potter y la Cámara Secreta", 20, "en, es, it, fr", "16:9");
 
 $videoclub->incluirSocio("admin", "admin", "Administrador");
 $videoclub->incluirSocio("shin", "shin", "Shin Chan");
@@ -24,6 +28,7 @@ $videoclub->alquilarSocioProducto("shin" , "mdread");
 // echo "Número de productos alquilados: " .  $videoclub->getNumeroProductosAlquilados() . "<br>";
 $videoclub->alquilarSocioProductos("shin", ["pkdbri", "tgatch"]);
 $videoclub->devolverSocioProductos("shin", ["tgatch", "pkdbri"]);
+$videoclub->alquilarSocioProducto("matsu", "hpchse");
 
 // $videoclub->listarSocios();
 // $videoclub->listarProductos();

@@ -14,11 +14,12 @@ class Dvd extends Soporte {
         $this->formatoPantalla = $formatoPantalla;    
     }
 
-    public function muestraResumen() : void {
-        parent::muestraResumen();
-        echo "Idiomas: ";
-        echo implode(", ", $this->idiomas) . ".<br>"; 
-        echo $this->formatoPantalla;
+    public function muestraResumen() : string {
+        $cadena = parent::muestraResumen()
+        . "Idiomas: "
+        . implode(", ", $this->idiomas) . ".<br>"
+        . $this->formatoPantalla;
+        return $cadena;
     }
 
 }

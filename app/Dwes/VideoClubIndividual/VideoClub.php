@@ -91,12 +91,14 @@ class VideoClub {
         return $cliente;
     }
 
-    public function listarProductos() {
+    public function listarProductos() :string {
+        $cadena = "";
         foreach ($this->productos as $identificador => $producto) {
-            echo "<br>";
-            $producto->muestraResumen();
-            echo "<br>";
+            $cadena .= "<br>" .
+            $producto->muestraResumen() .
+             "<br>";
         }
+        return $cadena;
     }
 
     public function listarSocios() {

@@ -4,6 +4,10 @@ include_once "./vendor/autoload.php";
 if (!isset($_SESSION)) {
     session_start();
 }
+
+if (!isset($_SESSION["cliente"])) {
+    header("Location: index.php");
+}
 $cliente = $_SESSION["cliente"];
 $nombre = $cliente->getNombre();
 $user = $cliente->getUser();

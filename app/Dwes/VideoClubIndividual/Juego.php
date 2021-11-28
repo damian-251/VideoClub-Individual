@@ -16,22 +16,25 @@ class Juego extends Soporte {
         $this->maxJugadores = $maxJugadores;
     }
 
-    public function muestraJugadoresPosibles() {
+    public function muestraJugadoresPosibles() : string {
+        $cadena = "";
         if ($this->minJugadores == $this->maxJugadores) {
             if ($this->minJugadores == 1) {
-                echo "Para 1 jugador";
+                $cadena .= "Para 1 jugador";
             }else {
-                echo "Para " . $this->minJugadores . " jugadores.";
+                $cadena .= "Para " . $this->minJugadores . " jugadores.";
             }
         }else {
-            echo "De " . $this->minJugadores . " a " . $this->maxJugadores . " jugadores.<br>";
+            $cadena.= "De " . $this->minJugadores . " a " . $this->maxJugadores . " jugadores.<br>";
         }
+        return $cadena;
     }
 
-    public function muestraResumen() : void {
-        echo "Juego para: " . $this->consola . ".<br>";
-        parent::muestraResumen();
-        echo $this->muestraJugadoresPosibles();
+    public function muestraResumen() : string {
+        $cadena = "Juego para: " . $this->consola . ".<br>" .
+        parent::muestraResumen() .
+        $this->muestraJugadoresPosibles();
+        return $cadena;
     }
 
 }

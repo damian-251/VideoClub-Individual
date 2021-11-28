@@ -42,16 +42,17 @@ abstract class Soporte implements Resumible {
         $this->alquilado = $alquilado;
     }
 
-    public function muestraResumen() : void {
-        echo $this->identificador . "<br>";
-        echo "<i>" . $this->titulo . "</i><br>";
-        echo $this->precio . "€ (IVA no incluido)<br>";
+    public function muestraResumen() : string {
+        $cadena = $this->identificador . "<br>" .
+        "<i>" . $this->titulo . "</i><br>" .
+         $this->precio . "€ (IVA no incluido)<br>";
         if ($this->alquilado) {
-            echo "Alquilado";
+            $cadena .= "Alquilado";
         }else {
-            echo "NO Alquilado";
+            $cadena .= "NO Alquilado";
         }
-        echo "<br>";
+        $cadena.= "<br>";
+        return $cadena;
     }
 
 }

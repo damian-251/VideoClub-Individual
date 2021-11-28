@@ -9,9 +9,9 @@
             "email": "damianmd251@gmail.com"
         }
     ],
-    
     "autoload": {
-        "psr-4": {"Dwes\\": "app/Dwes"}
+        "psr-4": {"Dwes\\": "app/Dwes" ,
+        "Dwes\\VideoClubIndividual\\Model\\" : "tests"}
     },
     "require": {
         "monolog/monolog": "^2.3",
@@ -19,7 +19,6 @@
     },
     "scripts": {
         "test" : "phpunit --testdox --colors tests"
-        
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5"
