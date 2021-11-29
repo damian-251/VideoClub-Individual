@@ -9,6 +9,15 @@ if ($_SESSION["user"]!= "admin") {
     die("Vista solo disponible para el administrador <a href='index.php'>Iniciar sesión</a>");
 }
 
+if(!isset($_COOKIE["visita"])) {
+    $contador = 1;
+    setcookie("visita", $contador);
+}else {
+    $contador = $_COOKIE["visita"];
+    $contador++;
+    setcookie("visita", $contador);
+}
+
 include_once "baseDatos.php"; //Incluimos los clientes y los soportes
 //Añadir filtros para que solo pueda acceder el admin
 
@@ -44,6 +53,7 @@ include_once "baseDatos.php"; //Incluimos los clientes y los soportes
         <input type="submit" name="submit" value="Eliminar cliente">
     </form>
     </div>
+    <p>Es tu visita número <?=$contador?></p>
     <h2>Listado de clientes</h2>
     <?php
     foreach ($_SESSION["clientes"] as $cliente) {

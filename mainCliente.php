@@ -11,6 +11,14 @@ if (!isset($_SESSION["cliente"])) {
 $cliente = $_SESSION["cliente"];
 $nombre = $cliente->getNombre();
 $user = $cliente->getUser();
+if(!isset($_COOKIE["visita" . $user])) {
+    $contador = 1;
+    setcookie("visita" . $user, $contador);
+}else {
+    $contador = $_COOKIE["visita" . $user];
+    $contador++;
+    setcookie("visita" . $user, $contador);
+}
 
 ?>
 
@@ -30,6 +38,7 @@ $user = $cliente->getUser();
         </ul>
     </nav>
     <p><a href="logout.php">Cerrar sesión</a></p>
+    <p>Es tu visita número <?=$contador?></p>
     <h2>Listado de alquileres</h2>
     <p>
         <?=$cliente->listarAlquileres();?>

@@ -25,7 +25,8 @@ if (isset($_POST["submit"])) {
         include "index.php";
     } else { //Si los campos tienen valores comprobamos que tenga el valor correcto
         //Comprobamos si el usuario y la contraseña son correctos
-        if ($videoclub->getClientes()[$user]->getPassword() == $password) {
+        if (isset($videoclub->getClientes()[$user])
+            && $videoclub->getClientes()[$user]->getPassword() == $password) {
             //El inicio de sesión ha sido correcto
             session_start();
             $_SESSION["user"] = $user;

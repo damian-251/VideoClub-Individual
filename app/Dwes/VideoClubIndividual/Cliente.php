@@ -134,12 +134,13 @@ class Cliente {
      *
      * @return void Escribe por pantalla el resumen de cada soporte alquilado
      */
-    public function listarAlquileres() : void {
+    public function listarAlquileres() : string {
         foreach ($this->SoportesAlquilados as $Identificador => $soporte) {
-            echo "<br>";
-            $soporte->muestraResumen();
-            echo "<br>";
+            $cadena ="<br>" .
+            $soporte->muestraResumen() .
+            "<br>";
         }
+        return $cadena;
     }
 
     public function muestraResumen() : void {

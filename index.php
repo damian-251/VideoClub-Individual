@@ -1,3 +1,8 @@
+<?php
+if (!isset($error)) {
+    $error = "";
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,6 +18,7 @@
 </head>
 <body>
     <h1>VideoClub - Inicio de Sesión</h1>
+    <p><?=$error?></p>
     <form action="login.php" method="post">
         <div class="div-user">
         <label for="usuario">Usuario</label>
